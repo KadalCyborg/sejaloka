@@ -1,24 +1,31 @@
-import Logo2 from '../../../assets/image/logo2.jpg';
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../configs/firebase';
 
-const CardReviews = [
-  {
-    src: Logo2,
-    title: 'Dicoding',
-    desc: 'Peninggalan Bersejarah Luar Biasa Yang Bisa Kalian Kunjungi',
-  },
-  {
-    src: Logo2,
-    title: 'Dicoding',
-    desc: 'Peninggalan Bersejarah Luar Biasa Yang Bisa Kalian Kunjungi',
-  },
-  {
-    src: Logo2,
-    title: 'Dicoding',
-    desc: 'Peninggalan Bersejarah Luar Biasa Yang Bisa Kalian Kunjungi',
-  },
-];
 
 const TravelerReviews = () => {
+  const  [review, setReview] = useState([])
+
+  const getTempatWisataCollection = async () => {
+    let tempatWisata = []
+    let tempatWisataRef = await collection(db, "travelerReview")
+    let result = await getDocs(tempatWisataRef)
+    result.forEach((res) => {
+      tempatWisata.push({
+        firestoreId: res.id, 
+        ...res.data(),
+      });
+    });
+    return tempatWisata
+  }
+
+  useEffect(() => {
+    getTempatWisataCollection()
+    .then((res) => {
+      setReview(res)
+    })
+    .catch((err) => console.error(err))
+  })
   return (
     <section id='Traveler-Reviews' className='bg-white'>
       <div className='flex flex-wrap min-h-full items-center justify-center bg-white py-8 '>
@@ -28,12 +35,12 @@ const TravelerReviews = () => {
           </h1>
         </div>
         <div className='grid min-[400px]:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
-          {CardReviews.map((item, index) => (
+          {review.map((e) => (
             <div
               className='card w-96 bg-amber-600 shadow-xl'
-              key={index}
+              key={e.firestoreId}
               data-aos='fade-up'
-              data-aos-delay={index * 100}
+              data-aos-delay={e.id * 100}
               data-aos-duration='1000'
               data-aos-easing='ease-in-out'
               data-aos-mirror='true'
@@ -41,11 +48,11 @@ const TravelerReviews = () => {
               data-aos-anchor-placement='top-center'
             >
               <figure>
-                <img src={item.src} alt='' />
+                <img src={e.url} alt='' />
               </figure>
               <div className='card-body text-white'>
-                <h2 className='card-title justify-center mb-4'>{item.title}</h2>
-                <p className='text-center'>{item.desc}</p>
+                <h2 className='card-title justify-center mb-4'>{e.name}</h2>
+                <p className='text-center'>{e.review}</p>
               </div>
             </div>
           ))}
