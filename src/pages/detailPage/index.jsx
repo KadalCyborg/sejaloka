@@ -127,7 +127,7 @@ const DetailPage = () => {
               <h2 className='font-semibold text-3xl text-amber-400 my-16'>
                 Tentang Museum Geologi Bandung
               </h2>
-              <p>{placeData.url}</p>
+              <p>{placeData.Deskripsi}</p>
             </div>
           </div>
           <div className='flex items-center justify-center text-black'>
