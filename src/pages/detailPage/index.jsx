@@ -27,11 +27,15 @@ const Reviews = [
 ];
 
 const DetailPage = () => {
-  const [ placeData, setPlace ] = useState();
-  const { id } = useParams();
+  const [ placeData, setPlace ] = useState([])
+  const { id } = useParams()
   const fetchPlaceDetails = async () => {
-    const placeRef = await doc(db, "Informasi-Wisata", `${id}`);
+    const match = id.match(/:id (.+)/);
+    const museumName = match ? match[1] : null;
+    console.log(museumName);
+    const placeRef = await doc(db, "Informasi-Wisata", museumName);
     const placeDoc = await getDoc(placeRef);
+
     if (placeDoc.exists()) {
       const place = placeDoc.data();
       return place;
@@ -53,7 +57,7 @@ const DetailPage = () => {
     <>
       <MainLayout>
         <Navbar />
-        <Header image={placeData.url} />
+        <Header image={placeData?.url} />
 
         <div className='bg-white'>
           <div className='items-center justify-center flex'>
@@ -123,18 +127,7 @@ const DetailPage = () => {
               <h2 className='font-semibold text-3xl text-amber-400 my-16'>
                 Tentang Museum Geologi Bandung
               </h2>
-              <p>
-                Museum Geologi didirikan pada tanggal 16 Mei 1929. Museum ini
-                direnovasi dengan mendapat dana bantuan dari JICA. Setelah
-                renovasi selesai, Museum Geologi dibuka kembali dan diresmikan
-                oleh Wakil Presiden RI, Megawati Soekarnoputri pada 23 Agustus
-                2000.Sebagai monumen bersejarah, museum ini berada di bawah
-                perlindungan pemerintah dan merupakan peninggalan sejarah
-                nasional. Di museum ini, tersimpan dan mengelola berbagai materi
-                geologi, seperti fosil, batuan, dan mineral. Semua materi
-                tersebut dikumpulkan selama kerja lapangan di Indonesia sejak
-                tahun 1850.
-              </p>
+              <p>{placeData.url}</p>
             </div>
           </div>
           <div className='flex items-center justify-center text-black'>

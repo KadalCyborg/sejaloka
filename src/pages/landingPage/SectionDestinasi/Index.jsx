@@ -24,7 +24,6 @@ const SectionDestinasi = () => {
     getTempatWisataCollection()
     .then((res) => {
       setDestinasi(res)
-      console.info(destinasi)
     })
     .catch((err) => console.error(err))
   })
